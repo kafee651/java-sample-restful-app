@@ -18,4 +18,14 @@ public class GreetingController {
     greetingar[1] = new Greeting(counter.incrementAndGet(),String.format(template, name));
     return greetingar;
   }
+  @RequestMapping("/profilelist")
+  public Profile[] profileList(@RequestParam(value="name", defaultValue="uddin") String name){
+    Profile[] profiles = new Profile[5];
+    profiles[0] = new Profile("Mohammad", "Kafee");
+    profiles[1] = new Profile("Mohammad", "Konain");
+    profiles[2] = new Profile("Mohammad", "Sakif");
+    profiles[3] = new Profile("Abu", "Zar");
+    profiles[4] = new Profile("Abdus", "Salam");
+    return profiles;
+  }
 }
