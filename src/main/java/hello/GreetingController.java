@@ -1,5 +1,6 @@
 package hello;
 
+
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,15 +22,40 @@ public class GreetingController {
     greetingar[1] = new Greeting(counter.incrementAndGet(),String.format(template, name));
     return greetingar;
   }
+  /*
   @CrossOrigin
-  @RequestMapping("/profilelist")
-  public Profile[] profileList(@RequestParam(value="name", defaultValue="uddin") String name){
-    Profile[] profiles = new Profile[5];
-    profiles[0] = new Profile("Mohammad", "Kafee");
-    profiles[1] = new Profile("Mohammad", "Konain");
-    profiles[2] = new Profile("Mohammad", "Sakif");
-    profiles[3] = new Profile("Abu", "Zar");
-    profiles[4] = new Profile("Abdus", "Salam");
-    return profiles;
+  @RequestMapping("/productCatalog")
+  public List<ProductCatalog> getProduct(@RequestParam(value="commodity", defaultValue="53101501") String commodity) {
+    List<ProductCatalog> productCatalog;
+    productCatalog = getProductCatalog(commodity);
+    return productCatalog;
   }
+  public List<ProductCatalog> getProductCatalog(String commodity){
+    List<ProductCatalog> productCatalog = new ArrayList<>();
+
+    String url = "jdbc:db2://dashdb-txn-sbox-yp-lon02-01.services.eu-gb.bluemix.net:50000/BLUDB";
+        Connection conn = null;
+        try {
+            conn =  DriverManager.getConnection(url, "xnj68236", "x+wz8d02rf6wktbl");
+            System.out.println("successful");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        String selectSQL = "SELECT * FROM XNJ68236.XXIBM_PRODUCT_CATALOG";
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        try {
+          pstmt = conn.prepareStatement(selectSQL);
+          rs = pstmt.executeQuery();
+
+          while (rs.next()) {
+              System.out.println(rs.getString("SEGMENT_NAME"));
+              ProductCatalog pc = new ProductCatalog(rs.getInt("SEGMENT_NAME"),rs.getString("SEGMENT_NAME"),rs.getInt("SEGMENT_NAME"),rs.getString("SEGMENT_NAME"),rs.getInt("SEGMENT_NAME"),rs.getString("SEGMENT_NAME"),rs.getInt("SEGMENT_NAME"),rs.getString("SEGMENT_NAME"));
+              
+          }
+      } catch (SQLException e) {
+          System.out.println(e.getMessage());
+      } 
+    return productCatalog;
+  }*/
 }
