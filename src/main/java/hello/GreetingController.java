@@ -7,12 +7,46 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.BufferedInputStream; 
+
+import com.ibm.cloud.sdk.core.security.IamAuthenticator;
+import com.ibm.watson.speech_to_text.v1.SpeechToText;
+import com.ibm.watson.speech_to_text.v1.model.GetModelOptions;
+import com.ibm.watson.speech_to_text.v1.model.RecognizeOptions;
+import com.ibm.watson.speech_to_text.v1.model.SpeechModel;
+import com.ibm.watson.speech_to_text.v1.model.SpeechModels;
+import com.ibm.watson.speech_to_text.v1.model.SpeechRecognitionResults;
+import com.ibm.watson.speech_to_text.v1.websocket.BaseRecognizeCallback;
 
 @RestController
 public class GreetingController {
 
   private static final String template = "Hello, %s!";
   private final AtomicLong counter = new AtomicLong();
+  SpeechRecognitionResults speechRecognitionResults = null;
+  IamAuthenticator authenticator = new IamAuthenticator("F_DeO8U6y42r1dLd_ofJQEMBH96rRTFh5016CdoJKOv9");
+	SpeechToText speechToText = new SpeechToText(authenticator);
+	
+
 
   @CrossOrigin
   @RequestMapping("/greeting")
@@ -22,40 +56,28 @@ public class GreetingController {
     greetingar[1] = new Greeting(counter.incrementAndGet(),String.format(template, name));
     return greetingar;
   }
-  /*
   @CrossOrigin
-  @RequestMapping("/productCatalog")
-  public List<ProductCatalog> getProduct(@RequestParam(value="commodity", defaultValue="53101501") String commodity) {
-    List<ProductCatalog> productCatalog;
-    productCatalog = getProductCatalog(commodity);
-    return productCatalog;
-  }
-  public List<ProductCatalog> getProductCatalog(String commodity){
-    List<ProductCatalog> productCatalog = new ArrayList<>();
+  @PostMapping("/uploadFile")
+    public SpeechRecognitionResults uploadFile(@RequestParam("file") MultipartFile file) {
+      speechToText.setServiceUrl("https://api.eu-gb.speech-to-text.watson.cloud.ibm.com/instances/c65fddb6-4ad7-4152-a2b9-b952b3b938fd");
 
-    String url = "jdbc:db2://dashdb-txn-sbox-yp-lon02-01.services.eu-gb.bluemix.net:50000/BLUDB";
-        Connection conn = null;
         try {
-            conn =  DriverManager.getConnection(url, "xnj68236", "x+wz8d02rf6wktbl");
-            System.out.println("successful");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        String selectSQL = "SELECT * FROM XNJ68236.XXIBM_PRODUCT_CATALOG";
-        ResultSet rs = null;
-        PreparedStatement pstmt = null;
-        try {
-          pstmt = conn.prepareStatement(selectSQL);
-          rs = pstmt.executeQuery();
+            RecognizeOptions recognizeOptions = new RecognizeOptions.Builder()
+              .audio(new BufferedInputStream(file.getInputStream()))
+              .contentType("audio/flac")
+              .model("en-US_BroadbandModel")
+              .keywords(Arrays.asList("colorado", "tornado", "tornadoes"))
+              .keywordsThreshold((float) 0.5)
+              .maxAlternatives(3)
+              .build();
 
-          while (rs.next()) {
-              System.out.println(rs.getString("SEGMENT_NAME"));
-              ProductCatalog pc = new ProductCatalog(rs.getInt("SEGMENT_NAME"),rs.getString("SEGMENT_NAME"),rs.getInt("SEGMENT_NAME"),rs.getString("SEGMENT_NAME"),rs.getInt("SEGMENT_NAME"),rs.getString("SEGMENT_NAME"),rs.getInt("SEGMENT_NAME"),rs.getString("SEGMENT_NAME"));
-              
+          speechRecognitionResults = speechToText.recognize(recognizeOptions).execute().getResult();
+            //System.out.println(speechRecognitionResults);
+          } catch(IOException io){
+            io.printStackTrace();
           }
-      } catch (SQLException e) {
-          System.out.println(e.getMessage());
-      } 
-    return productCatalog;
-  }*/
+          return speechRecognitionResults;
+  
+    }
+ 
 }

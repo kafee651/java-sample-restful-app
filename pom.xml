@@ -33,6 +33,11 @@
             <artifactId>jcc</artifactId>
             <version>11.1.4.4</version>
         </dependency>
+        <dependency>
+			<groupId>com.ibm.watson</groupId>
+			<artifactId>ibm-watson</artifactId>
+			<version>8.1.0</version>
+	  </dependency>
     </dependencies>
 
     <properties>
