@@ -37,6 +37,12 @@ import com.ibm.watson.speech_to_text.v1.model.SpeechModels;
 import com.ibm.watson.speech_to_text.v1.model.SpeechRecognitionResults;
 import com.ibm.watson.speech_to_text.v1.websocket.BaseRecognizeCallback;
 
+
+import com.ibm.watson.developer_cloud.service.security.IamOptions;
+import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
+import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifiedImages;
+import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyOptions;
+
 @RestController
 public class GreetingController {
 
@@ -77,6 +83,24 @@ public class GreetingController {
             io.printStackTrace();
           }
           return speechRecognitionResults;
+  
+    }
+  @CrossOrigin
+  @PostMapping("/uploadImage")
+    public ClassifiedImages uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+      IamOptions options = new IamOptions.Builder()
+				.apiKey("IhlwwaNpSW-mgm7K0NHC5p5EHABra-nTnAm_B6fYmmj6")
+				.build();
+			VisualRecognition service = new VisualRecognition("2018-03-19", options);
+			ClassifyOptions classifyOptions = new ClassifyOptions.Builder()
+				.imagesFile(new BufferedInputStream(file.getInputStream()))
+				.imagesFilename("1003.jfif")
+				.threshold((float) 0.6)
+				.classifierIds(Arrays.asList("watson-visual-model_24450533"))
+				.build();
+			ClassifiedImages result = service.classify(classifyOptions).execute();
+      System.out.println(result);
+      return result;
   
     }
  

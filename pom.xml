@@ -37,7 +37,12 @@
 			<groupId>com.ibm.watson</groupId>
 			<artifactId>ibm-watson</artifactId>
 			<version>8.1.0</version>
-	  </dependency>
+	    </dependency>
+      	<dependency>
+		    <groupId>com.ibm.watson.developer_cloud</groupId>
+		    <artifactId>java-sdk</artifactId>
+		    <version>6.9.0</version>
+	    </dependency>
     </dependencies>
 
     <properties>
