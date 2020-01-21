@@ -70,7 +70,7 @@ public class GreetingController {
         try {
             RecognizeOptions recognizeOptions = new RecognizeOptions.Builder()
               .audio(new BufferedInputStream(file.getInputStream()))
-              .contentType("audio/flac")
+              .contentType("audio/wav")
               .model("en-US_BroadbandModel")
               .keywords(Arrays.asList("colorado", "tornado", "tornadoes"))
               .keywordsThreshold((float) 0.5)
