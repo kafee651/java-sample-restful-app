@@ -96,7 +96,7 @@ public class GreetingController {
 				.imagesFile(new BufferedInputStream(file.getInputStream()))
 				.imagesFilename("1003.jfif")
 				.threshold((float) 0.6)
-				.classifierIds(Arrays.asList("watson-visual-model_24450533"))
+				.classifierIds(Arrays.asList("watson-visual-service_3166914"))
 				.build();
 			ClassifiedImages result = service.classify(classifyOptions).execute();
       System.out.println(result);
