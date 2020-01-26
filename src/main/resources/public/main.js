@@ -1088,7 +1088,7 @@ let RestApiService = class RestApiService {
     getAllSearchProductList(param) {
         var url;
         if (param)
-            url = this.apiURL + '/api/getproducts/desc/' + param;
+            url = this.apiURL + '/api/getproducts/desc/' + param.toLowerCase();
         else
             url = this.apiURL + '/api/getproducts';
         return this.http.get(url)
