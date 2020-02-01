@@ -72,7 +72,7 @@ public class GreetingController {
               .audio(new BufferedInputStream(file.getInputStream()))
               .contentType("audio/wav")
               .model("en-US_BroadbandModel")
-              .keywords(Arrays.asList("colorado", "tornado", "tornadoes"))
+              .keywords(Arrays.asList("men", "women", "shirt", "slim","unisex","shirt"))
               .keywordsThreshold((float) 0.5)
               .maxAlternatives(3)
               .build();
